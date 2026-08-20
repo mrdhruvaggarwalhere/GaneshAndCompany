@@ -217,7 +217,7 @@ const ChainViewComponent = {
                   Deal Date: ${Store.formatDate(d.deal_date)} | Delivery: ${Store.formatDate(d.delivery_date)}
                 </span>
               </div>
-              <div style="display: flex; gap: 8px; align-items: center;">
+              <div style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 8px; align-items: center; white-space: nowrap;">
                 <span class="badge badge-${d.status}">${d.status}</span>
                 ${d.status !== 'cancelled' && Store.can('deals.cancel') ? `
                   <button class="btn btn-sm btn-outline-danger" style="padding: 2px 8px; font-size: 0.7rem;" onclick="ChainViewComponent.cancelDeal(${d.id})">

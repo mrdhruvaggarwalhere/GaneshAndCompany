@@ -164,11 +164,11 @@ const ReportsComponent = {
               ${Store.formatINR(r.outstanding_brokerage)}
             </td>
             <td>
-              <div style="display: flex; gap: 4px;">
-                <button class="btn btn-sm btn-success" style="font-size: 0.7rem; padding: 2px 6px; background: #22c55e; color: #000;" onclick="CommModalComponent.open({ message_type: 'brokerage_statement', party_id: ${r.id} })" title="Send Brokerage Statement">
+              <div style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 6px; white-space: nowrap;">
+                <button class="btn btn-sm btn-glass-success" style="font-size: 0.7rem; padding: 4px 8px;" onclick="CommModalComponent.open({ message_type: 'brokerage_statement', party_id: ${r.id} })" title="Send Brokerage Statement">
                   💬 WhatsApp
                 </button>
-                <button class="btn btn-sm btn-primary" style="font-size: 0.7rem; padding: 2px 6px;" onclick="CommModalComponent.open({ message_type: 'brokerage_payment_reminder', party_id: ${r.id} })" title="Send Payment Reminder">
+                <button class="btn btn-sm btn-glass-primary" style="font-size: 0.7rem; padding: 4px 8px;" onclick="CommModalComponent.open({ message_type: 'brokerage_payment_reminder', party_id: ${r.id} })" title="Send Payment Reminder">
                   ✉️ Reminder
                 </button>
               </div>

@@ -190,17 +190,17 @@ const DashboardComponent = {
             <td class="font-mono text-gold">${Store.formatINR(d.total_brokerage)}</td>
             <td><span class="badge badge-${d.status}">${d.status}</span></td>
             <td>
-              <div style="display: flex; gap: 4px; align-items: center;">
-                <button class="btn btn-sm btn-success" style="padding: 3px 6px; font-size: 11px; background: #22c55e; color: #000; font-weight: 700;" onclick="CommModalComponent.open({ message_type: 'deal_confirmation_buyer', deal_id: ${d.id}, party_id: ${d.buyer_id} })" title="Send WhatsApp / Email confirmation">
+              <div style="display: flex; flex-direction: row; flex-wrap: nowrap; gap: 6px; align-items: center; white-space: nowrap;">
+                <button class="btn btn-sm btn-glass-success" style="padding: 4px 8px; font-size: 11px;" onclick="CommModalComponent.open({ message_type: 'deal_confirmation_buyer', deal_id: ${d.id}, party_id: ${d.buyer_id} })" title="Send WhatsApp / Email confirmation">
                   💬
                 </button>
-                <button class="btn btn-sm btn-secondary" style="padding: 3px 8px; font-size: 11px;" onclick="App.viewChain(${d.chain_id})">
+                <button class="btn btn-sm btn-glass-primary" style="padding: 4px 8px; font-size: 11px;" onclick="App.viewChain(${d.chain_id})">
                   Chain
                 </button>
                 <button 
-                  class="btn btn-sm btn-outline-danger" 
+                  class="btn btn-sm btn-glass-default" 
                   title="Delete Deal"
-                  style="padding: 3px 6px; font-size: 11px; border-color: rgba(239, 68, 68, 0.4); color: var(--danger-red);"
+                  style="padding: 4px 8px; font-size: 11px; color: var(--danger-red);"
                   onclick="DashboardComponent.deleteDeal(${d.id}, '${d.deal_number}')"
                 >
                   🗑️
