@@ -582,7 +582,7 @@ class GncApiHandler(SimpleHTTPRequestHandler):
                        COALESCE((SELECT SUM(buyer_brokerage_amount) FROM deals WHERE buyer_id = p.id AND status != 'cancelled' AND COALESCE(is_deleted, 0) = 0), 0) +
                        COALESCE((SELECT SUM(seller_brokerage_amount) FROM deals WHERE seller_id = p.id AND status != 'cancelled' AND COALESCE(is_deleted, 0) = 0), 0) as total_brokerage_charged,
                        COALESCE((SELECT SUM(amount) FROM brokerage_payments WHERE party_id = p.id AND COALESCE(is_deleted, 0) = 0), 0) as total_brokerage_paid,
-                       COALESCE((SELECT SUM(price_diff_profit) FROM deals WHERE (buyer_id = p.id OR seller_id = p.id) AND status != 'cancelled' AND COALESCE(is_deleted, 0) = 0), 0) as total_chain_profit,
+                       COALESCE((SELECT SUM(price_diff_profit) FROM deals WHERE buyer_id = p.id AND status != 'cancelled' AND COALESCE(is_deleted, 0) = 0), 0) as total_chain_profit,
                        (SELECT COUNT(*) FROM deals WHERE (buyer_id = p.id OR seller_id = p.id) AND status != 'cancelled' AND COALESCE(is_deleted, 0) = 0) as total_deals_count
                 FROM parties p
                 WHERE COALESCE(p.is_deleted, 0) = 0
@@ -624,7 +624,7 @@ class GncApiHandler(SimpleHTTPRequestHandler):
 
             total_charged = sum(d["party_brokerage"] for d in deals)
             total_paid = sum(p["amount"] for p in payments)
-            total_profit_generated = sum(d["price_diff_profit"] for d in deals if d["price_diff_profit"] > 0)
+            total_profit_generated = sum(d["price_diff_profit"] for d in deals if d["price_diff_profit"] > 0 and d["buyer_id"] == party_id)
 
             self._send_json({
                 "success": True,
