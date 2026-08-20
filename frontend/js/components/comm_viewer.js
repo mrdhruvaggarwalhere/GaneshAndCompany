@@ -267,7 +267,7 @@ const CommViewerComponent = {
     const isWa = item.channel === 'whatsapp';
 
     const modalHtml = `
-      <div id="comm-detail-modal" class="modal-overlay" style="
+      <div id="comm-detail-modal" class="modal-overlay active" style="
         position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 9999;
         display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);
         padding: 20px;

@@ -49,12 +49,12 @@ const CommModalComponent = {
     const isBothPreferred = d.preferred_method === 'both' && (d.whatsapp_candidates || []).length > 0 && (d.email_candidates || []).length > 0;
 
     const modalHtml = `
-      <div id="comm-modal-overlay" class="modal-overlay" style="
+      <div id="comm-modal-overlay" class="modal-overlay active" style="
         position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 99999;
         display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);
         padding: 16px;
       ">
-        <div class="card animate-fade-in" style="
+        <div class="card animate-fade-in modal-container" style="
           width: 100%; max-width: 780px; max-height: 94vh; overflow-y: auto;
           background: #1e293b; border: 1px solid var(--border-subtle); box-shadow: 0 24px 48px rgba(0,0,0,0.6);
           position: relative; padding: 20px;
