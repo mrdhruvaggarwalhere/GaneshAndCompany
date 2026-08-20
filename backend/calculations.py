@@ -257,9 +257,12 @@ def compute_chain_totals(deals: List[Dict[str, Any]]) -> Dict[str, Any]:
     first_deal = active_deals_sorted[0]
     last_deal = active_deals_sorted[-1]
 
-    # The buyer's name of the Root Lot Purchase (Link #1) issues the final direct commercial bill to the Final Buyer
-    original_bill_seller_id = first_deal.get("buyer_id")
-    original_bill_seller_name = first_deal.get("buyer_name", "Root Lot Buyer")
+    if len(active_deals_sorted) == 1:
+        original_bill_seller_id = first_deal.get("seller_id")
+        original_bill_seller_name = first_deal.get("seller_name", "Root Lot Seller")
+    else:
+        original_bill_seller_id = first_deal.get("buyer_id")
+        original_bill_seller_name = first_deal.get("buyer_name", "Root Lot Buyer")
     final_bill_buyer_id = last_deal.get("buyer_id")
     final_bill_buyer_name = last_deal.get("buyer_name", "Final Buyer")
     final_billing_rate = to_decimal(last_deal.get("rate_per_qtl", last_deal.get("actual_rate_per_qtl", 0)))

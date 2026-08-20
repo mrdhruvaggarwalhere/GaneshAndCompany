@@ -1014,7 +1014,7 @@ class GncApiHandler(SimpleHTTPRequestHandler):
                 body["product_id"],
                 float(summary["quantity_qtl"]),
                 float(summary["quantity_qtl"]),
-                body["buyer_id"],   # Root Lot Purchase Buyer issues the final direct bill
+                body["seller_id"],  # Root Lot Seller issues bill when there are no resales
                 body["buyer_id"],   # Initial Buyer
                 float(summary["rate_per_qtl"]),
                 body.get("notes"),
@@ -1178,15 +1178,23 @@ class GncApiHandler(SimpleHTTPRequestHandler):
             ))
             new_deal_id = cursor.lastrowid
 
+            # Get root lot buyer to act as original bill seller for multi-link chains
+            root_lot_deal = row_to_dict(cursor.execute("""
+                SELECT buyer_id FROM deals
+                WHERE chain_id = ? AND COALESCE(is_deleted, 0) = 0 AND status != 'cancelled'
+                ORDER BY deal_date ASC, id ASC LIMIT 1
+            """, (chain_id,)).fetchone())
+
             # Update chain status & final buyer
             cursor.execute("""
                 UPDATE deal_chains SET
+                    original_bill_seller_id = ?,
                     final_bill_buyer_id = ?,
                     final_billing_rate = ?,
                     status = 'ready_for_billing',
                     updated_at = CURRENT_TIMESTAMP
                 WHERE id = ?
-            """, (buyer_id, float(summary["actual_rate_per_qtl"]), chain_id))
+            """, (root_lot_deal["buyer_id"], buyer_id, float(summary["actual_rate_per_qtl"]), chain_id))
 
             log_audit(
                 user_id=user_id, username=username, action="CREATE",
