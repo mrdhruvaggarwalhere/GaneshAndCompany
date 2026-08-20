@@ -185,19 +185,19 @@ const CommModalComponent = {
           <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); padding: 6px 10px; border-radius: var(--radius-md); margin-bottom: 14px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between;">
             <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">📋 Fallback Actions:</span>
             <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-              <button class="btn btn-sm btn-secondary" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.copyRecipient()">
+              <button class="btn btn-sm btn-glass-default" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.copyRecipient()">
                 Copy Recipient
               </button>
-              <button class="btn btn-sm btn-secondary" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.copySubject()">
+              <button class="btn btn-sm btn-glass-default" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.copySubject()">
                 Copy Subject
               </button>
-              <button class="btn btn-sm btn-secondary" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.copyBody()">
+              <button class="btn btn-sm btn-glass-default" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.copyBody()">
                 Copy Message
               </button>
-              <button class="btn btn-sm btn-secondary" style="font-size: 0.7rem; padding: 2px 7px; color: var(--text-gold);" onclick="CommModalComponent.downloadDealPdf()">
+              <button class="btn btn-sm btn-glass-default" style="font-size: 0.7rem; padding: 2px 7px; color: var(--text-gold);" onclick="CommModalComponent.downloadDealPdf()">
                 📥 Download Deal PDF
               </button>
-              <button class="btn btn-sm btn-secondary" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.openRediffmail()">
+              <button class="btn btn-sm btn-glass-default" style="font-size: 0.7rem; padding: 2px 7px;" onclick="CommModalComponent.openRediffmail()">
                 🌐 Rediffmail Login
               </button>
             </div>
@@ -210,21 +210,21 @@ const CommModalComponent = {
             </div>
 
             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-              <button class="btn btn-secondary btn-sm" onclick="CommModalComponent.close()">
+              <button class="btn btn-glass-default btn-sm" onclick="CommModalComponent.close()">
                 Cancel
               </button>
 
               ${isBothPreferred ? `
-                <button class="btn btn-sm btn-primary" onclick="CommModalComponent.launchBoth()" style="background: linear-gradient(135deg, #10b981, #2563eb);">
+                <button class="btn btn-sm btn-glass-primary" onclick="CommModalComponent.launchBoth()">
                   <span>🚀</span> Open WhatsApp and Email
                 </button>
               ` : ''}
 
-              <button class="btn btn-sm btn-success" onclick="CommModalComponent.launchWhatsApp()" style="background: #22c55e; color: #000; font-weight: 700;">
+              <button class="btn btn-sm btn-glass-success" onclick="CommModalComponent.launchWhatsApp()">
                 <span>💬</span> WhatsApp
               </button>
 
-              <button class="btn btn-sm btn-primary" onclick="CommModalComponent.launchEmail()">
+              <button class="btn btn-sm btn-glass-gold" onclick="CommModalComponent.launchEmail()">
                 <span>✉️</span> Email
               </button>
             </div>

@@ -68,16 +68,16 @@ const ChainViewComponent = {
           </div>
 
           <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border-subtle);">
-            <button class="btn btn-sm btn-success" style="background: #22c55e; color: #000; font-weight: 700;" onclick="CommModalComponent.open({ message_type: 'final_billing_instruction', chain_id: ChainViewComponent.currentChainId })">
+            <button class="btn btn-sm btn-glass-success" onclick="CommModalComponent.open({ message_type: 'final_billing_instruction', chain_id: ChainViewComponent.currentChainId })">
               <span>💬</span> Send Billing Instruction (WhatsApp / Email)
             </button>
-            <button class="btn btn-sm btn-success" id="btn-approve-billing" onclick="ChainViewComponent.approveBilling()" style="display: none;">
+            <button class="btn btn-sm btn-solid-success" id="btn-approve-billing" onclick="ChainViewComponent.approveBilling()" style="display: none;">
               <span>✅</span> Approve Final Commercial Billing
             </button>
-            <button class="btn btn-sm btn-outline-gold" onclick="ChainViewComponent.copyInstruction()">
+            <button class="btn btn-sm btn-glass-gold" onclick="ChainViewComponent.copyInstruction()">
               <span>📋</span> Copy Mandate
             </button>
-            <button class="btn btn-sm btn-secondary" onclick="ChainViewComponent.stageBusyVoucher()">
+            <button class="btn btn-sm btn-glass-default" onclick="ChainViewComponent.stageBusyVoucher()">
               <span>⚡</span> Prepare BUSY Voucher
             </button>
           </div>
