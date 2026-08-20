@@ -3,6 +3,7 @@
  */
 const PartyLedgerComponent = {
   activePartyId: null,
+  isSidebarOpen: true,
 
   async render(container, partyId) {
     this.activePartyId = partyId || Store.state.activePartyId || null;
@@ -15,6 +16,9 @@ const PartyLedgerComponent = {
             <p class="text-secondary" style="font-size: 0.875rem;">Manage Client Masters, Dual Brokerage Defaults, and Detailed Transaction Statements</p>
           </div>
           <div style="display: flex; gap: 10px;">
+            <button id="toggle-sidebar-btn" class="btn btn-secondary" onclick="PartyLedgerComponent.toggleSidebar()" title="Toggle Parties Directory Sidebar">
+              <span>⬅️</span>
+            </button>
             <button class="btn btn-primary" onclick="PartyLedgerComponent.openAddPartyModal()">
               <span>➕</span> Add New Party
             </button>
@@ -24,10 +28,10 @@ const PartyLedgerComponent = {
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: minmax(280px, 1fr) 2fr; gap: 24px; align-items: start;">
+        <div id="party-ledger-grid" style="display: grid; grid-template-columns: minmax(280px, 1fr) 2fr; gap: 24px; align-items: start;">
           
           <!-- Left: Party Directory List -->
-          <div class="card" style="min-height: 400px; max-height: calc(100vh - 200px); display: flex; flex-direction: column; position: sticky; top: 80px;">
+          <div id="party-sidebar" class="card" style="min-height: 400px; max-height: calc(100vh - 200px); display: flex; flex-direction: column; position: sticky; top: 80px;">
             <div class="card-header" style="margin-bottom: 12px;">
               <div class="card-title"><span>👥</span> Parties Directory</div>
             </div>
@@ -58,6 +62,31 @@ const PartyLedgerComponent = {
     await this.loadParties();
     if (this.activePartyId) {
       this.viewPartyStatement(this.activePartyId);
+    }
+    
+    // Maintain state if re-rendered
+    if (!this.isSidebarOpen) {
+      this.isSidebarOpen = true; // force toggle to close it
+      this.toggleSidebar();
+    }
+  },
+
+  toggleSidebar() {
+    this.isSidebarOpen = !this.isSidebarOpen;
+    const grid = document.getElementById('party-ledger-grid');
+    const sidebar = document.getElementById('party-sidebar');
+    const btn = document.getElementById('toggle-sidebar-btn');
+    
+    if (grid && sidebar && btn) {
+      if (this.isSidebarOpen) {
+        grid.style.gridTemplateColumns = 'minmax(280px, 1fr) 2fr';
+        sidebar.style.display = 'flex';
+        btn.innerHTML = '<span>⬅️</span>';
+      } else {
+        grid.style.gridTemplateColumns = '1fr';
+        sidebar.style.display = 'none';
+        btn.innerHTML = '<span>➡️</span> Directory';
+      }
     }
   },
 
