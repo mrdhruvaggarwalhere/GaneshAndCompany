@@ -6,16 +6,29 @@ const App = {
   async init() {
     console.log("Initializing G&C Automation Platform...");
     
-    // Bind Store subscriber for role updates
+    // Bind Store subscriber for user updates
     Store.subscribe((state) => {
-      this.updateUserUI(state.currentUser);
+      if (state.currentUser) {
+        this.updateUserUI(state.currentUser);
+      }
     });
+
+    // Check Authentication Status
+    const token = localStorage.getItem('gnc_auth_token');
+    if (!token) {
+      this.showLoginScreen();
+      return;
+    }
+
+    // Show workspace
+    this.showWorkspace();
 
     // Load Initial Master Data
     await this.loadInitialData();
 
     // Attach global keyboard shortcuts
     window.addEventListener('keydown', (e) => {
+      if (!Store.state.isAuthenticated) return;
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
         e.preventDefault();
         this.navigate('new_deal');
@@ -30,6 +43,40 @@ const App = {
     this.navigate('dashboard');
   },
 
+  showLoginScreen() {
+    const loginContainer = document.getElementById('login-view-container');
+    const workspace = document.getElementById('app-workspace');
+    if (workspace) workspace.style.display = 'none';
+    if (loginContainer) {
+      loginContainer.style.display = 'block';
+      LoginPageComponent.render(loginContainer);
+    }
+  },
+
+  showWorkspace() {
+    const loginContainer = document.getElementById('login-view-container');
+    const workspace = document.getElementById('app-workspace');
+    if (loginContainer) loginContainer.style.display = 'none';
+    if (workspace) workspace.style.display = 'flex';
+  },
+
+  async onLoginSuccess() {
+    this.showWorkspace();
+    await this.loadInitialData();
+    this.navigate('dashboard');
+  },
+
+  async logout() {
+    try {
+      await API.logout();
+    } catch (e) {
+      console.warn("Logout request:", e);
+    }
+    Store.clearAuth();
+    Store.showToast('You have been signed out.', 'info');
+    this.showLoginScreen();
+  },
+
   async loadInitialData() {
     try {
       const [partiesRes, prodsRes, userRes] = await Promise.all([
@@ -40,10 +87,16 @@ const App = {
 
       if (partiesRes.success) Store.setParties(partiesRes.parties);
       if (prodsRes.success) Store.setProducts(prodsRes.products);
-      if (userRes.success && userRes.user) Store.setUser(userRes.user);
+      if (userRes.success && userRes.user) {
+        Store.setUser(userRes.user);
+        this.updateUserUI(userRes.user);
+      }
 
     } catch (err) {
       console.warn("Could not load initial master data:", err);
+      if (err.message && err.message.includes('401')) {
+        this.logout();
+      }
     }
   },
 
@@ -220,9 +273,9 @@ const App = {
       Store.showToast(`Deal Chain ${chainCode} deleted.`, 'warning', async () => {
         await API.restoreChain(chainId);
         Store.showToast(`Deal Chain ${chainCode} restored successfully!`, 'success');
-        App.renderChainsListView(document.getElementById('main-content'));
+        App.renderChainsListView(document.getElementById('view-container'));
       });
-      this.renderChainsListView(document.getElementById('main-content'));
+      this.renderChainsListView(document.getElementById('view-container'));
     } catch (err) {
       Store.showToast(`Failed to delete chain: ${err.message}`, 'error');
     }
@@ -252,6 +305,30 @@ const App = {
     if (nameEl) nameEl.innerText = user.full_name;
     if (roleEl) roleEl.innerText = user.role.toUpperCase();
     if (selectEl && selectEl.value !== user.role) selectEl.value = user.role;
+  },
+
+  toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar) return;
+    const isOpen = sidebar.classList.contains('open');
+    if (isOpen) {
+      sidebar.classList.remove('open');
+      if (overlay) overlay.classList.remove('visible');
+      document.body.style.overflow = '';
+    } else {
+      sidebar.classList.add('open');
+      if (overlay) overlay.classList.add('visible');
+      document.body.style.overflow = 'hidden';
+    }
+  },
+
+  closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('visible');
+    document.body.style.overflow = '';
   }
 };
 

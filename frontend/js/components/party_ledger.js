@@ -24,10 +24,10 @@ const PartyLedgerComponent = {
           </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+        <div style="display: grid; grid-template-columns: minmax(280px, 1fr) 2fr; gap: 24px; align-items: start;">
           
           <!-- Left: Party Directory List -->
-          <div class="card" style="height: calc(100vh - 180px); display: flex; flex-direction: column;">
+          <div class="card" style="min-height: 400px; max-height: calc(100vh - 200px); display: flex; flex-direction: column; position: sticky; top: 80px;">
             <div class="card-header" style="margin-bottom: 12px;">
               <div class="card-title"><span>👥</span> Parties Directory</div>
             </div>

@@ -71,7 +71,7 @@ const ChainViewComponent = {
             <button class="btn btn-sm btn-success" style="background: #22c55e; color: #000; font-weight: 700;" onclick="CommModalComponent.open({ message_type: 'final_billing_instruction', chain_id: ChainViewComponent.currentChainId })">
               <span>💬</span> Send Billing Instruction (WhatsApp / Email)
             </button>
-            <button class="btn btn-sm btn-success" id="btn-approve-billing" onclick="ChainViewComponent.approveBilling()">
+            <button class="btn btn-sm btn-success" id="btn-approve-billing" onclick="ChainViewComponent.approveBilling()" style="display: none;">
               <span>✅</span> Approve Final Commercial Billing
             </button>
             <button class="btn btn-sm btn-outline-gold" onclick="ChainViewComponent.copyInstruction()">
@@ -123,6 +123,29 @@ const ChainViewComponent = {
       document.getElementById('meta-chain-profit').innerText = Store.formatINR(totals.total_price_diff_profit);
       document.getElementById('meta-chain-brokerage').innerText = Store.formatINR(totals.total_brokerage);
       document.getElementById('meta-chain-earnings').innerText = Store.formatINR(totals.total_chain_earning);
+
+      // Show/hide Approve Billing button based on chain status and RBAC
+      const approveBtn = document.getElementById('btn-approve-billing');
+      const resellBtn = document.querySelector('button[onclick="ChainViewComponent.openResaleModal()"]');
+      const isBilledOrCancelled = ch.status === 'billed' || ch.status === 'cancelled';
+      if (approveBtn) {
+        const canApproveBilling = Store.can('billing.approve');
+        const chainNotYetBilled = ch.status !== 'billed' && ch.status !== 'cancelled';
+        approveBtn.style.display = (canApproveBilling && chainNotYetBilled) ? 'inline-flex' : 'none';
+      }
+      // Disable Resell button for finalized chains
+      document.querySelectorAll('button[onclick="ChainViewComponent.openResaleModal()"]').forEach(btn => {
+        if (isBilledOrCancelled) {
+          btn.disabled = true;
+          btn.title = `Chain is ${ch.status} — no further resale links can be added.`;
+          btn.style.opacity = '0.4';
+          btn.style.cursor = 'not-allowed';
+        } else {
+          btn.disabled = false;
+          btn.style.opacity = '';
+          btn.style.cursor = '';
+        }
+      });
 
       // Render Party Profit Breakdown Card
       const profitBreakdownContainer = document.getElementById('party-profit-breakdown-container');

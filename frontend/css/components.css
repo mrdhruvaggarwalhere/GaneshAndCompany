@@ -474,3 +474,266 @@
   overflow-y: auto;
   white-space: pre;
 }
+
+/* =========================================================================
+   LUXURY LOGIN PAGE & AUTHENTICATION COMPONENTS
+   ========================================================================= */
+.login-page-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, rgba(245, 158, 11, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
+              #090d16;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-page-wrapper::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 480px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(245, 158, 11, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+.login-crest-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-crest-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, #f59e0b, #b45309);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  font-weight: 800;
+  color: #090d16;
+  box-shadow: 0 8px 20px rgba(245, 158, 11, 0.35);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #fff;
+  margin: 0 0 6px 0;
+}
+
+.login-title span {
+  color: var(--text-gold);
+}
+
+.login-subtitle {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.login-input-group {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.login-input-icon {
+  position: absolute;
+  left: 14px;
+  top: 38px;
+  color: var(--text-muted);
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.login-input-with-icon {
+  padding-left: 42px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 12px;
+  top: 34px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.password-toggle-btn:hover {
+  color: var(--text-gold);
+}
+
+.demo-users-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px dashed var(--border-subtle);
+}
+
+.demo-users-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-gold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.demo-user-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.demo-chip {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-fast);
+  text-align: left;
+}
+
+.demo-chip:hover {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: var(--text-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.demo-chip-role {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.demo-chip-user {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  margin-top: 2px;
+  font-family: var(--font-mono);
+}
+
+.login-security-badge {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES FOR MOBILE / TABLET
+   ============================================================ */
+
+/* Deal Form: collapse 2-col to 1-col on small screens */
+@media (max-width: 768px) {
+  /* Collapse deal form grid */
+  div[style*="grid-template-columns: 2fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  div[style*="grid-template-columns: 1.5fr 1fr 1fr"] {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  div[style*="grid-template-columns: 1fr 2fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Timeline node adjustments */
+  .timeline-metrics {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .timeline-parties {
+    flex-direction: column !important;
+    gap: 4px !important;
+    align-items: flex-start !important;
+  }
+
+  /* Metric grid: two columns on phone */
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Party ledger: stack vertically */
+  div[style*="minmax(280px, 1fr) 2fr"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Sticky party list: remove sticky on mobile */
+  div[style*="position: sticky"] {
+    position: static !important;
+    max-height: 300px !important;
+  }
+
+  /* Billing meta grid: 2-col */
+  .billing-meta-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .billing-meta-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .timeline-metrics {
+    grid-template-columns: 1fr !important;
+  }
+  /* Stack action buttons */
+  div[style*="display: flex; gap: 10px"] {
+    flex-wrap: wrap !important;
+  }
+}
+
+/* General: ensure buttons in tables wrap on small screens */
+td div[style*="display: flex"] {
+  flex-wrap: wrap;
+}
+
+
+

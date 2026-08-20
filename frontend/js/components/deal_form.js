@@ -69,6 +69,7 @@ const DealFormComponent = {
                 <div class="form-group">
                   <label class="form-label">Product / Commodity *</label>
                   <select id="product_id" class="form-select" required onchange="DealFormComponent.recalc()">
+                    <option value="">-- Select Product / Commodity --</option>
                     ${productOptions}
                   </select>
                 </div>
@@ -77,14 +78,14 @@ const DealFormComponent = {
                     <span>Quantity (Quintals) *</span>
                     <span class="unit-badge">10 Qtl = 1 MT</span>
                   </label>
-                  <input type="number" step="0.01" id="quantity_qtl" class="form-control font-mono" placeholder="e.g. 320" required oninput="DealFormComponent.recalc()">
+                  <input type="number" step="0.01" min="0.01" id="quantity_qtl" class="form-control font-mono" placeholder="e.g. 320" required oninput="DealFormComponent.recalc()">
                 </div>
                 <div class="form-group">
                   <label class="form-label">
                     <span>Rate (₹ / Quintal) *</span>
                     <span class="unit-badge">Per Qtl</span>
                   </label>
-                  <input type="number" step="0.01" id="rate_per_qtl" class="form-control font-mono" placeholder="e.g. 15700" required oninput="DealFormComponent.recalc()">
+                  <input type="number" step="0.01" min="0.01" id="rate_per_qtl" class="form-control font-mono" placeholder="e.g. 15700" required oninput="DealFormComponent.recalc()">
                 </div>
               </div>
 
@@ -114,14 +115,14 @@ const DealFormComponent = {
                       <span>Buyer Brokerage (₹ / Tonne)</span>
                       <span class="unit-badge">₹/MT</span>
                     </label>
-                    <input type="number" step="0.01" id="buyer_brokerage_rate" class="form-control font-mono" value="50.0" oninput="DealFormComponent.recalc()">
+                    <input type="number" step="0.01" min="0" id="buyer_brokerage_rate" class="form-control font-mono" value="50.0" oninput="DealFormComponent.recalc()">
                   </div>
                   <div class="form-group">
                     <label class="form-label">
                       <span>Seller Brokerage (₹ / Tonne)</span>
                       <span class="unit-badge">₹/MT</span>
                     </label>
-                    <input type="number" step="0.01" id="seller_brokerage_rate" class="form-control font-mono" value="50.0" oninput="DealFormComponent.recalc()">
+                    <input type="number" step="0.01" min="0" id="seller_brokerage_rate" class="form-control font-mono" value="50.0" oninput="DealFormComponent.recalc()">
                   </div>
                 </div>
 
@@ -268,6 +269,12 @@ const DealFormComponent = {
 
     const buyerId = document.getElementById('buyer_id').value;
     const sellerId = document.getElementById('seller_id').value;
+    const productId = document.getElementById('product_id').value;
+
+    if (!productId) {
+      Store.showToast('Please select a product / commodity.', 'error');
+      return;
+    }
 
     if (!buyerId || !sellerId) {
       Store.showToast('Please select both buyer and seller parties.', 'error');
@@ -309,7 +316,18 @@ const DealFormComponent = {
   },
 
   saveAsDraft() {
-    const form = document.getElementById('new-deal-form');
-    this.handleSubmit({ preventDefault: () => { } }, 'draft');
+    // Validate minimally — only dates and status are required for draft
+    const buyerId = document.getElementById('buyer_id').value;
+    const sellerId = document.getElementById('seller_id').value;
+    const productId = document.getElementById('product_id').value;
+    const qty = document.getElementById('quantity_qtl').value;
+    const rate = document.getElementById('rate_per_qtl').value;
+
+    if (!productId || !buyerId || !sellerId || !qty || !rate) {
+      Store.showToast('Please fill in required fields (Product, Buyer, Seller, Quantity, Rate) before saving as draft.', 'error');
+      return;
+    }
+
+    this.handleSubmit({ preventDefault: () => {} }, 'draft');
   }
 };

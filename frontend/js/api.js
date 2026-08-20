@@ -43,6 +43,7 @@ const API = {
 
   // Auth
   login: (username, password) => API.request('/api/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) }),
+  logout: () => API.request('/api/auth/logout', { method: 'POST' }),
   getMe: () => API.request('/api/auth/me'),
 
   // Dashboard

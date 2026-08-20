@@ -36,7 +36,8 @@ from auth_audit import (
     get_current_user,
     check_permission,
     log_audit,
-    get_audit_trail
+    get_audit_trail,
+    SESSIONS
 )
 from excel_exporter import create_excel_workbook
 from busy_adapter import BusyAccountingAdapter
@@ -89,9 +90,12 @@ class GncApiHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(binary_data)
 
-    def _get_auth_user(self) -> Optional[Dict[str, Any]]:
+    def _get_bearer_token(self) -> Optional[str]:
         auth_header = self.headers.get("Authorization", "")
-        token = auth_header.replace("Bearer ", "").strip() if auth_header else None
+        return auth_header.replace("Bearer ", "").strip() if auth_header else None
+
+    def _get_auth_user(self) -> Optional[Dict[str, Any]]:
+        token = self._get_bearer_token()
         return get_current_user(token)
 
     def _read_body_json(self) -> Dict[str, Any]:
@@ -292,6 +296,22 @@ class GncApiHandler(SimpleHTTPRequestHandler):
                 self._send_json({"success": True, "session": session})
             else:
                 self._send_error("Invalid username or password", 401)
+            return
+
+        # 1b. Logout
+        if path == "/api/auth/logout":
+            token = self._get_bearer_token()
+            if token and token in SESSIONS:
+                del SESSIONS[token]
+            log_audit(
+                user_id=user_id,
+                username=username,
+                action="LOGOUT",
+                entity_type="user",
+                entity_id=str(user_id),
+                notes="User logged out"
+            )
+            self._send_json({"success": True, "message": "Logged out successfully"})
             return
 
         # 2. Create Initial Deal & Chain

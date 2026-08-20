@@ -5,12 +5,15 @@
 
 const Store = {
   state: {
-    currentUser: {
-      user_id: 1,
-      username: 'admin',
-      role: 'admin',
-      full_name: 'G&C Administrator'
-    },
+    isAuthenticated: Boolean(localStorage.getItem('gnc_auth_token')),
+    currentUser: (() => {
+      try {
+        const saved = localStorage.getItem('gnc_user');
+        return saved ? JSON.parse(saved) : null;
+      } catch (e) {
+        return null;
+      }
+    })(),
     parties: [],
     products: [],
     currentTab: 'dashboard',
@@ -28,8 +31,25 @@ const Store = {
     this.listeners.forEach(fn => fn(this.state));
   },
 
+  setAuth(user, token) {
+    if (token) localStorage.setItem('gnc_auth_token', token);
+    if (user) localStorage.setItem('gnc_user', JSON.stringify(user));
+    this.state.currentUser = user;
+    this.state.isAuthenticated = true;
+    this.notify();
+  },
+
+  clearAuth() {
+    localStorage.removeItem('gnc_auth_token');
+    localStorage.removeItem('gnc_user');
+    this.state.currentUser = null;
+    this.state.isAuthenticated = false;
+    this.notify();
+  },
+
   setUser(user) {
     this.state.currentUser = user;
+    if (user) localStorage.setItem('gnc_user', JSON.stringify(user));
     this.notify();
   },
 

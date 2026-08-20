@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>G&C Central Deal and Brokerage Automation Platform</title>
   <meta name="description" content="Central commodity deal, multi-link resale margins, dual-party brokerage, and direct commercial billing automation platform for Ganesh & Company.">
+  <meta name="theme-color" content="#090d16">
   
   <!-- CSS Stylesheets -->
   <link rel="stylesheet" href="css/design-system.css">
@@ -13,7 +14,17 @@
 </head>
 <body>
 
-  <div class="app-container">
+  <!-- Full-Screen Login View Container (Shown when unauthenticated) -->
+  <div id="login-view-container" style="display: none;"></div>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="App.closeSidebar()"></div>
+
+  <!-- Mobile Hamburger Toggle Button -->
+  <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" onclick="App.toggleSidebar()" aria-label="Toggle navigation menu" title="Toggle Menu">☰</button>
+
+  <!-- Authenticated Application Workspace -->
+  <div class="app-container" id="app-workspace">
     
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="sidebar">
@@ -27,68 +38,68 @@
 
       <ul class="nav-menu">
         <li class="nav-item">
-          <a href="#" data-tab="dashboard" class="active" onclick="App.navigate('dashboard'); return false;">
+          <a href="#" data-tab="dashboard" class="active" onclick="App.navigate('dashboard'); App.closeSidebar(); return false;">
             <span class="nav-icon">📊</span>
             <span>Dashboard</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="new_deal" onclick="App.navigate('new_deal'); return false;">
+          <a href="#" data-tab="new_deal" onclick="App.navigate('new_deal'); App.closeSidebar(); return false;">
             <span class="nav-icon">➕</span>
             <span>New Deal Entry</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="chains" onclick="App.navigate('chains'); return false;">
+          <a href="#" data-tab="chains" onclick="App.navigate('chains'); App.closeSidebar(); return false;">
             <span class="nav-icon">⛓️</span>
             <span>Deal Chains & Lots</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="parties" onclick="App.navigate('parties'); return false;">
+          <a href="#" data-tab="parties" onclick="App.navigate('parties'); App.closeSidebar(); return false;">
             <span class="nav-icon">👥</span>
             <span>Party Master & Ledger</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="communications" onclick="App.navigate('communications'); return false;">
+          <a href="#" data-tab="communications" onclick="App.navigate('communications'); App.closeSidebar(); return false;">
             <span class="nav-icon">💬</span>
             <span>Client Communications</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="products" onclick="App.navigate('products'); return false;">
+          <a href="#" data-tab="products" onclick="App.navigate('products'); App.closeSidebar(); return false;">
             <span class="nav-icon">📦</span>
             <span>Product Catalog</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="reports" onclick="App.navigate('reports'); return false;">
+          <a href="#" data-tab="reports" onclick="App.navigate('reports'); App.closeSidebar(); return false;">
             <span class="nav-icon">📈</span>
             <span>Reports & Excel</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="busy" onclick="App.navigate('busy'); return false;">
+          <a href="#" data-tab="busy" onclick="App.navigate('busy'); App.closeSidebar(); return false;">
             <span class="nav-icon">⚡</span>
             <span>BUSY Integration</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="trash" onclick="App.navigate('trash'); return false;">
+          <a href="#" data-tab="trash" onclick="App.navigate('trash'); App.closeSidebar(); return false;">
             <span class="nav-icon">🗑️</span>
             <span>Deleted Items (Recycle Bin)</span>
             <span class="badge badge-warning" id="sidebar-trash-count" style="display:none; margin-left:auto; font-size:10px; padding:2px 6px; border-radius:10px;"></span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="audit" onclick="App.navigate('audit'); return false;">
+          <a href="#" data-tab="audit" onclick="App.navigate('audit'); App.closeSidebar(); return false;">
             <span class="nav-icon">🛡️</span>
             <span>Audit Trail & Diff</span>
           </a>
         </li>
         <li class="nav-item">
-          <a href="#" data-tab="tests" onclick="App.navigate('tests'); return false;">
+          <a href="#" data-tab="tests" onclick="App.navigate('tests'); App.closeSidebar(); return false;">
             <span class="nav-icon">🧪</span>
             <span>Acceptance Test Suite</span>
           </a>
@@ -96,12 +107,17 @@
       </ul>
 
       <!-- User Profile & Active Session -->
-      <div class="user-profile-bar">
-        <div class="user-info">
-          <span class="user-name" id="top-user-name">G&C Administrator</span>
-          <span class="user-role" id="top-user-role">ADMIN</span>
+      <div class="user-profile-bar" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 8px; overflow: hidden;">
+          <div style="font-size: 1.2rem;">👤</div>
+          <div class="user-info" style="overflow: hidden;">
+            <span class="user-name" id="top-user-name" style="white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">Administrator</span>
+            <span class="user-role" id="top-user-role">ADMIN</span>
+          </div>
         </div>
-        <div style="font-size: 1.2rem;">👤</div>
+        <button class="btn btn-sm btn-outline-danger" onclick="App.logout()" title="Sign out of G&C Platform" aria-label="Sign Out" style="padding: 5px 10px; font-size: 0.75rem;">
+          🚪 Sign Out
+        </button>
       </div>
     </aside>
 
@@ -115,20 +131,20 @@
           <span class="text-secondary font-mono" style="font-size: 0.8125rem;">Edible Oil Commodity Brokerage Engine</span>
         </div>
 
-        <div style="display: flex; align-items: center; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
           
           <!-- RBAC Switcher for testing and role simulation -->
-          <div style="display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.25); padding: 4px 10px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
-            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">ACTIVE ROLE:</span>
-            <select id="role-switcher-select" class="form-select" style="padding: 4px 8px; font-size: 0.75rem; width: auto; background: transparent; border: none; color: var(--text-gold); font-weight: 700; cursor: pointer;" onchange="App.switchRole(this.value)">
-              <option value="admin" style="background: #0f172a; color: #fff;">Admin (Full Control)</option>
-              <option value="broker" style="background: #0f172a; color: #fff;">Broker (Deals & Resale)</option>
-              <option value="accounts" style="background: #0f172a; color: #fff;">Accounts (Billing & Ledgers)</option>
-              <option value="viewer" style="background: #0f172a; color: #fff;">Viewer (Read-Only)</option>
+          <div style="display: flex; align-items: center; gap: 6px; background: rgba(0,0,0,0.25); padding: 4px 10px; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+            <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; white-space: nowrap;">ROLE:</span>
+            <select id="role-switcher-select" class="form-select" style="padding: 4px 6px; font-size: 0.75rem; width: auto; background: transparent; border: none; color: var(--text-gold); font-weight: 700; cursor: pointer;" onchange="App.switchRole(this.value)" aria-label="Switch Active Role">
+              <option value="admin" style="background: #0f172a; color: #fff;">Admin</option>
+              <option value="broker" style="background: #0f172a; color: #fff;">Broker</option>
+              <option value="accounts" style="background: #0f172a; color: #fff;">Accounts</option>
+              <option value="viewer" style="background: #0f172a; color: #fff;">Viewer</option>
             </select>
           </div>
 
-          <button class="btn btn-sm btn-outline-gold" onclick="API.downloadExcel()">
+          <button class="btn btn-sm btn-outline-gold" onclick="API.downloadExcel()" aria-label="Export to Excel" title="Export to Excel (.xlsx)">
             <span>📥</span> Export XLSX
           </button>
         </div>
@@ -148,7 +164,7 @@
     <div class="modal-container">
       <div class="modal-header">
         <h3 id="modal-title">Modal Title</h3>
-        <button class="modal-close-btn" onclick="Store.closeModal()">&times;</button>
+        <button class="modal-close-btn" onclick="Store.closeModal()" aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body" id="modal-body">
         <!-- Body Content -->
@@ -165,6 +181,7 @@
   <!-- Application Scripts -->
   <script src="js/api.js"></script>
   <script src="js/store.js"></script>
+  <script src="js/components/login_page.js"></script>
   <script src="js/components/communication_modal.js"></script>
   <script src="js/components/comm_viewer.js"></script>
   <script src="js/components/dashboard.js"></script>
