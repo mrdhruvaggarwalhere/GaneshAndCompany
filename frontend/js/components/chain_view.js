@@ -151,28 +151,40 @@ const ChainViewComponent = {
       const profitBreakdownContainer = document.getElementById('party-profit-breakdown-container');
       const breakdown = totals.party_profit_breakdown || [];
       if (breakdown.length > 0) {
+        const isTotalLoss = totals.total_price_diff_profit < 0;
+        const totalBadgeClass = isTotalLoss ? 'badge-loss' : 'badge-profit';
+        const totalSign = isTotalLoss ? '' : '+';
+
         profitBreakdownContainer.innerHTML = `
           <div style="background: rgba(34, 197, 94, 0.07); border: 1px solid rgba(34, 197, 94, 0.25); border-radius: var(--radius-md); padding: 12px 16px;">
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
               <span style="font-size: 0.8125rem; font-weight: 700; color: #4ade80; text-transform: uppercase; letter-spacing: 0.5px;">
                 💰 Party-wise Chain Profit Receivables (Who Pays Margin Profit)
               </span>
-              <span class="badge badge-profit font-mono" style="font-weight: 700;">
-                Total Realized: ${Store.formatINR(totals.total_price_diff_profit)}
+              <span class="badge ${totalBadgeClass} font-mono" style="font-weight: 700;">
+                Total Realized: ${totalSign}${Store.formatINR(totals.total_price_diff_profit)}
               </span>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 10px;">
-              ${breakdown.map(item => `
-                <div style="background: rgba(0,0,0,0.3); padding: 10px 12px; border-radius: 6px; border-left: 3px solid #22c55e;">
+              ${breakdown.map(item => {
+                const isLoss = item.profit_amount < 0;
+                const sign = isLoss ? '' : '+';
+                const colorClass = isLoss ? 'text-loss' : 'text-profit';
+                const borderColor = isLoss ? '#ef4444' : '#22c55e';
+                const labelColor = isLoss ? '#fca5a5' : '#4ade80';
+                const diffSign = item.diff_per_qtl >= 0 ? '+' : '-';
+                
+                return `
+                <div style="background: rgba(0,0,0,0.3); padding: 10px 12px; border-radius: 6px; border-left: 3px solid ${borderColor};">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="color: #4ade80; font-size: 0.875rem;">${item.payer_party_name}</strong>
-                    <span class="font-mono text-profit font-bold" style="font-size: 0.95rem;">+${Store.formatINR(item.profit_amount)}</span>
+                    <strong style="color: ${labelColor}; font-size: 0.875rem;">${item.payer_party_name}</strong>
+                    <span class="font-mono ${colorClass} font-bold" style="font-size: 0.95rem;">${sign}${Store.formatINR(item.profit_amount)}</span>
                   </div>
                   <div class="text-muted" style="font-size: 0.75rem; margin-top: 4px;">
-                    Link #${item.link_index} (${item.deal_number}): Auth @ ₹${Number(item.authorized_rate).toLocaleString('en-IN')} ➔ Actual @ ₹${Number(item.actual_rate).toLocaleString('en-IN')} (+₹${item.diff_per_qtl}/Qtl on ${item.quantity_qtl} Qtl)
+                    Link #${item.link_index} (${item.deal_number}): Auth @ ₹${Number(item.authorized_rate).toLocaleString('en-IN')} ➔ Actual @ ₹${Number(item.actual_rate).toLocaleString('en-IN')} (${diffSign}₹${Math.abs(item.diff_per_qtl)}/Qtl on ${item.quantity_qtl} Qtl)
                   </div>
                 </div>
-              `).join('')}
+              `}).join('')}
             </div>
           </div>
         `;
@@ -264,11 +276,11 @@ const ChainViewComponent = {
               </div>
             </div>
 
-            ${profit > 0 ? `
-              <div style="background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.25); padding: 8px 12px; border-radius: 6px; margin-top: 8px; font-size: 0.8125rem; display: flex; justify-content: space-between; align-items: center;">
+            ${(profit !== 0 && d.authorized_rate_per_qtl > 0) ? `
+              <div style="background: rgba(${profit > 0 ? '34, 197, 94' : '239, 68, 68'}, 0.08); border: 1px solid rgba(${profit > 0 ? '34, 197, 94' : '239, 68, 68'}, 0.25); padding: 8px 12px; border-radius: 6px; margin-top: 8px; font-size: 0.8125rem; display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                  <strong style="color: #4ade80;">💰 Chain Profit Receivable:</strong> 
-                  <span class="font-mono text-profit" style="font-weight: 700; margin-left: 4px;">+${Store.formatINR(profit)}</span>
+                  <strong style="color: ${profit > 0 ? '#4ade80' : '#fca5a5'};">💰 Chain ${profit > 0 ? 'Profit' : 'Loss'} Receivable:</strong> 
+                  <span class="font-mono ${profit > 0 ? 'text-profit' : 'text-loss'}" style="font-weight: 700; margin-left: 4px;">${profit > 0 ? '+' : ''}${Store.formatINR(profit)}</span>
                   <span class="text-muted" style="margin-left: 6px;">from buyer <strong>${d.buyer_name}</strong></span>
                 </div>
                 <div class="text-muted font-mono" style="font-size: 0.75rem;">
