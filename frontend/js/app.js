@@ -29,6 +29,29 @@ const App = {
     // Attach global keyboard shortcuts
     window.addEventListener('keydown', (e) => {
       if (!Store.state.isAuthenticated) return;
+      
+      // Escape key to close popups or go back
+      if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal-overlay');
+        if (modals.length > 0) {
+          // Close the topmost modal
+          const topModal = modals[modals.length - 1];
+          topModal.remove();
+          e.preventDefault();
+          return;
+        }
+
+        // No modals open, try to go back in history
+        if (this.historyStack && this.historyStack.length > 0) {
+          const prev = this.historyStack.pop();
+          this.navigate(prev.tab, prev.params, true);
+        } else if (Store.state.currentTab !== 'dashboard') {
+          this.navigate('dashboard');
+        }
+        e.preventDefault();
+        return;
+      }
+
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'n') {
         e.preventDefault();
         this.navigate('new_deal');
@@ -100,7 +123,14 @@ const App = {
     }
   },
 
-  navigate(tab, params = {}) {
+  historyStack: [],
+
+  navigate(tab, params = {}, isBack = false) {
+    if (!isBack && Store.state.currentTab && Store.state.currentTab !== tab) {
+      if (!this.historyStack) this.historyStack = [];
+      this.historyStack.push({ tab: Store.state.currentTab, params: Store.state.lastParams || {} });
+    }
+    Store.state.lastParams = params;
     Store.setTab(tab);
     
     // Update active nav link
