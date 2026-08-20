@@ -30,7 +30,7 @@ const CommViewerComponent = {
         </div>
 
         <!-- KPI Cards -->
-        <div id="comm-kpi-container" class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div id="comm-kpi-container" class="metrics-grid">
           <!-- Populated by updateKPIs -->
         </div>
 
@@ -118,25 +118,33 @@ const CommViewerComponent = {
     const markedSent = this.communications.filter(c => c.status === 'Manually marked as sent').length;
 
     kpiEl.innerHTML = `
-      <div class="stat-card">
-        <div class="stat-label">Total Communications</div>
-        <div class="stat-value" style="color: var(--text-gold);">${total}</div>
-        <div class="stat-meta">Zero-cost outbound logs</div>
+      <div class="card metric-card gold-theme glow-gold">
+        <div class="metric-header">
+          <div class="metric-title"><span style="margin-right: 8px;">💬</span> Total Communications</div>
+        </div>
+        <div class="metric-value text-gold">${total}</div>
+        <div class="metric-subtext">Zero-cost outbound logs</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">WhatsApp Drafts</div>
-        <div class="stat-value" style="color: #22c55e;">${whatsapp}</div>
-        <div class="stat-meta">wa.me click-to-chat</div>
+      <div class="card metric-card profit-theme glow-profit">
+        <div class="metric-header">
+          <div class="metric-title"><span style="margin-right: 8px;">📱</span> WhatsApp Drafts</div>
+        </div>
+        <div class="metric-value text-profit">${whatsapp}</div>
+        <div class="metric-subtext">wa.me click-to-chat</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Email Drafts</div>
-        <div class="stat-value" style="color: #3b82f6;">${email}</div>
-        <div class="stat-meta">mailto: / webmail</div>
+      <div class="card metric-card alert-theme">
+        <div class="metric-header">
+          <div class="metric-title"><span style="margin-right: 8px;">✉️</span> Email Drafts</div>
+        </div>
+        <div class="metric-value" style="color: #60a5fa;">${email}</div>
+        <div class="metric-subtext">mailto: / webmail</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-label">Client Confirmed</div>
-        <div class="stat-value" style="color: var(--profit-green);">${confirmed}</div>
-        <div class="stat-meta">${markedSent} marked as sent</div>
+      <div class="card metric-card">
+        <div class="metric-header">
+          <div class="metric-title"><span style="margin-right: 8px;">✅</span> Client Confirmed</div>
+        </div>
+        <div class="metric-value">${confirmed}</div>
+        <div class="metric-subtext" style="color: var(--profit-green);">${markedSent} marked as sent</div>
       </div>
     `;
   },
